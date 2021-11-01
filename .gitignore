@@ -1,1 +1,6 @@
+apicache-py3/
+pywikibot.lwp
 result.json
+throttle.ctrl
+user-config.py
+user-password.py

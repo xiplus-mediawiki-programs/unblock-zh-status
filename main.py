@@ -1,14 +1,28 @@
+import argparse
 import collections
 import datetime
 import json
+import os
 
 import dateutil.relativedelta
 
+os.environ['PYWIKIBOT_DIR'] = os.path.dirname(os.path.realpath(__file__))
+import pywikibot
+
 from unblockzh.unblockzh import UnblockZh
 
+parser = argparse.ArgumentParser()
+parser.add_argument('--limit', type=int, default=500)
+parser.add_argument('--cache1', action='store_true')
+parser.add_argument('--cache2', action='store_true')
+parser.set_defaults(cache1=False)
+args = parser.parse_args()
+print(args)
+
 unblockZh = UnblockZh()
-unblockZh.maxResults = 500
-unblockZh.cacheThreads = True  # test
+unblockZh.maxResults = args.limit
+unblockZh.cacheThread = args.cache1
+unblockZh.cacheThreads = args.cache2
 unblockZh.loadThreads()
 unblockZh.loadThreadsContent()
 
@@ -44,3 +58,10 @@ while run_date > oldest_date:
 
 with open('result.json', 'w', encoding='utf8') as f:
     json.dump(result, f)
+
+site = pywikibot.Site()
+site.login()
+
+page = pywikibot.Page(site, 'User:Xiplus/Unblock-zh-status/data.js')
+page.text = json.dumps(result)
+page.save(summary='更新', minor=False)
