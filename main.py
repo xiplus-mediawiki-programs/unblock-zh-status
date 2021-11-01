@@ -15,7 +15,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--limit', type=int, default=500)
 parser.add_argument('--cache1', action='store_true')
 parser.add_argument('--cache2', action='store_true')
-parser.set_defaults(cache1=False)
+parser.set_defaults(cache1=False, cache2=False)
 args = parser.parse_args()
 print(args)
 
