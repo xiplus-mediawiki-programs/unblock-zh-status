@@ -3,10 +3,12 @@ import collections
 import datetime
 import json
 import os
+from pathlib import Path
 
 import dateutil.relativedelta
 
-os.environ['PYWIKIBOT_DIR'] = os.path.dirname(os.path.realpath(__file__))
+BASE_DIR = Path(__file__).resolve().parent
+os.environ['PYWIKIBOT_DIR'] = str(BASE_DIR)
 import pywikibot
 
 from unblockzh.unblockzh import UnblockZh
@@ -29,6 +31,7 @@ unblockZh.loadThreadsContent()
 count_done = collections.defaultdict(int)
 count_new = collections.defaultdict(int)
 oldest_date = datetime.datetime.now()
+new_links = []
 
 for thread in unblockZh.threads:
     data = unblockZh.getThread(thread['id'])
@@ -45,6 +48,7 @@ for thread in unblockZh.threads:
         count_done[date_str] += 1
     else:
         count_new[date_str] += 1
+        new_links.append((date_str, data['messages'][0]['archiveAt']))
 
 oldest_date = oldest_date.replace(hour=0, minute=0, second=0)
 
@@ -56,8 +60,12 @@ while run_date > oldest_date:
     result.append({'x': date_str, 'y': count_done[date_str], 'c': 1})
     run_date += dateutil.relativedelta.relativedelta(days=-1)
 
-with open('result.json', 'w', encoding='utf8') as f:
+with open(BASE_DIR / 'result.json', 'w', encoding='utf8') as f:
     json.dump(result, f)
+
+with open(BASE_DIR / 'new_links.txt', 'w', encoding='utf8') as f:
+    for row in new_links:
+        f.write('{} {}\n'.format(row[0], row[1]))
 
 site = pywikibot.Site()
 site.login()
