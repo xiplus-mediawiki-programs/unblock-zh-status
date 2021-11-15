@@ -70,6 +70,6 @@ with open(BASE_DIR / 'new_links.txt', 'w', encoding='utf8') as f:
 site = pywikibot.Site()
 site.login()
 
-page = pywikibot.Page(site, 'User:Xiplus/Unblock-zh-status/data.js')
+page = pywikibot.Page(site, 'User:Xiplus/Unblock-zh-status/data.json')
 page.text = json.dumps(result)
 page.save(summary='更新', minor=False)
