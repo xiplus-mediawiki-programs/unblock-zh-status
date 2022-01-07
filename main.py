@@ -41,7 +41,8 @@ for thread in unblockZh.threads:
     oldest_date = min(oldest_date, first_time)
 
     for message in data['messages']:
-        mail_list.add(message['xMailFrom'])
+        if 'xMailFrom' in message:
+            mail_list.add(message['xMailFrom'])
 
     date_str = first_time.strftime('%Y-%m-%d')
     if len(mail_list) > 1:
