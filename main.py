@@ -43,6 +43,8 @@ for thread in unblockZh.threads:
     for message in data['messages']:
         if 'xMailFrom' in message:
             mail_list.add(message['xMailFrom'])
+        elif 'fromAddress' in message:
+            mail_list.add(message['fromAddress'])
 
     date_str = first_time.strftime('%Y-%m-%d')
     if len(mail_list) > 1:
