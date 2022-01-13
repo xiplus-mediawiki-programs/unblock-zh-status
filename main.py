@@ -11,6 +11,7 @@ BASE_DIR = Path(__file__).resolve().parent
 os.environ['PYWIKIBOT_DIR'] = str(BASE_DIR)
 import pywikibot
 
+from config import ADMIN_MAILS
 from unblockzh.unblockzh import UnblockZh
 
 parser = argparse.ArgumentParser()
@@ -47,7 +48,7 @@ for thread in unblockZh.threads:
             mail_list.add(message['fromAddress'])
 
     date_str = first_time.strftime('%Y-%m-%d')
-    if len(mail_list) > 1:
+    if len(mail_list) > 1 or mail_list[0] in ADMIN_MAILS:
         count_done[date_str] += 1
     else:
         count_new[date_str] += 1

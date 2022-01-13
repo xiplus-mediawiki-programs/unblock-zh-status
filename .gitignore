@@ -1,4 +1,5 @@
 apicache-py3/
+config.py
 new_links.txt
 pywikibot.lwp
 result.json
