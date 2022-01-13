@@ -47,6 +47,7 @@ for thread in unblockZh.threads:
         elif 'fromAddress' in message:
             mail_list.add(message['fromAddress'])
 
+    mail_list = list(mail_list)
     date_str = first_time.strftime('%Y-%m-%d')
     if len(mail_list) > 1 or mail_list[0] in ADMIN_MAILS:
         count_done[date_str] += 1
