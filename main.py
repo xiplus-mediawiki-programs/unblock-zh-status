@@ -53,7 +53,7 @@ for thread in unblockZh.threads:
         count_done[date_str] += 1
     else:
         count_new[date_str] += 1
-        new_links.append((date_str, data['messages'][0]['archiveAt']))
+        new_links.append((date_str, data['messages'][0].get('archiveAt')))
 
 oldest_date = oldest_date.replace(hour=0, minute=0, second=0)
 
