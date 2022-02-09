@@ -11,7 +11,7 @@ BASE_DIR = Path(__file__).resolve().parent
 os.environ['PYWIKIBOT_DIR'] = str(BASE_DIR)
 import pywikibot
 
-from config import ADMIN_MAILS
+from config import ADMIN_MAILS, PAGE_NAME
 from unblockzh.unblockzh import UnblockZh
 
 parser = argparse.ArgumentParser()
@@ -75,6 +75,6 @@ with open(BASE_DIR / 'new_links.txt', 'w', encoding='utf8') as f:
 site = pywikibot.Site()
 site.login()
 
-page = pywikibot.Page(site, 'User:Xiplus/Unblock-zh-status/data.json')
+page = pywikibot.Page(site, PAGE_NAME)
 page.text = json.dumps(result)
 page.save(summary='更新', minor=False)
