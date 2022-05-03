@@ -53,24 +53,30 @@ for thread in unblockZh.threads:
         count_done[date_str] += 1
     else:
         count_new[date_str] += 1
-        new_links.append((date_str, data['messages'][0].get('archiveAt')))
+        new_links.append((
+            date_str,
+            data['messages'][0].get('archiveAt'),
+            data['messages'][0].get('subject'),
+        ))
 
 oldest_date = oldest_date.replace(hour=0, minute=0, second=0)
 
 run_date = datetime.datetime.now()
-result = []
+result = {'statistics': [], 'links': []}
 while run_date > oldest_date:
     date_str = run_date.strftime('%Y-%m-%d')
-    result.append({'x': date_str, 'y': count_new[date_str], 'c': 0})
-    result.append({'x': date_str, 'y': count_done[date_str], 'c': 1})
+    result['statistics'].append({'x': date_str, 'y': count_new[date_str], 'c': 0})
+    result['statistics'].append({'x': date_str, 'y': count_done[date_str], 'c': 1})
     run_date += dateutil.relativedelta.relativedelta(days=-1)
-
-with open(BASE_DIR / 'result.json', 'w', encoding='utf8') as f:
-    json.dump(result, f)
 
 with open(BASE_DIR / 'new_links.txt', 'w', encoding='utf8') as f:
     for row in new_links:
-        f.write('{} {}\n'.format(row[0], row[1]))
+        if row[1]:
+            result['links'].append({'date': row[0], 'link': row[1]})
+        f.write('{}\n'.format(' '.join(map(str, row))))
+
+with open(BASE_DIR / 'result.json', 'w', encoding='utf8') as f:
+    json.dump(result, f)
 
 site = pywikibot.Site()
 site.login()
