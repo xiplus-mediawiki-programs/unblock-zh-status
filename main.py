@@ -34,6 +34,8 @@ count_new = collections.defaultdict(int)
 oldest_date = datetime.datetime.now()
 new_links = []
 
+mail_count = collections.defaultdict(int)
+
 for thread in unblockZh.threads:
     data = unblockZh.getThread(thread['id'])
     data = unblockZh.parseThread(data)
@@ -58,6 +60,7 @@ for thread in unblockZh.threads:
             data['messages'][0].get('archiveAt'),
             data['messages'][0].get('subject'),
         ))
+        mail_count[mail_list[0]] += 1
 
 oldest_date = oldest_date.replace(hour=0, minute=0, second=0)
 
@@ -77,6 +80,11 @@ with open(BASE_DIR / 'new_links.txt', 'w', encoding='utf8') as f:
 
 with open(BASE_DIR / 'result.json', 'w', encoding='utf8') as f:
     json.dump(result, f)
+
+with open(BASE_DIR / 'dup_mails.txt', 'w', encoding='utf8') as f:
+    for mail, cnt in mail_count.items():
+        if cnt > 1:
+            f.write('{} {}\n'.format(mail, cnt))
 
 site = pywikibot.Site()
 site.login()

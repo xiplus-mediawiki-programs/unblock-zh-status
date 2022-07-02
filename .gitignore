@@ -1,9 +1,9 @@
 __pycache__/
+*.json
+*.txt
 apicache-py3/
 config.py
-new_links.txt
 pywikibot.lwp
-result.json
 throttle.ctrl
 user-config.py
 user-password.py
