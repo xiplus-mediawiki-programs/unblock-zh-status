@@ -22,7 +22,7 @@ parser.set_defaults(cache1=False, cache2=False)
 args = parser.parse_args()
 print(args)
 
-unblockZh = UnblockZh()
+unblockZh = UnblockZh(1234)
 unblockZh.maxResults = args.limit
 unblockZh.cacheThread = args.cache1
 unblockZh.cacheThreads = args.cache2
