@@ -81,10 +81,13 @@ with open(BASE_DIR / 'new_links.txt', 'w', encoding='utf8') as f:
 with open(BASE_DIR / 'result.json', 'w', encoding='utf8') as f:
     json.dump(result, f)
 
-with open(BASE_DIR / 'dup_mails.txt', 'w', encoding='utf8') as f:
+with open(BASE_DIR / 'dup_mails.html', 'w', encoding='utf8') as f:
+    f.write('<html><body><table>\n')
+    f.write('<tr><th>email</th><th>count</th><tr>\n')
     for mail, cnt in mail_count.items():
         if cnt > 1:
-            f.write('{} {}\n'.format(mail, cnt))
+            f.write('<tr><td>{}</td><td>{}</td></tr>\n'.format(mail, cnt))
+    f.write('</table></body></html>\n')
 
 site = pywikibot.Site()
 site.login()
