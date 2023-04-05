@@ -82,7 +82,8 @@ with open(BASE_DIR / 'result.json', 'w', encoding='utf8') as f:
     json.dump(result, f)
 
 with open(BASE_DIR / 'dup_mails.html', 'w', encoding='utf8') as f:
-    f.write('<html><body><table>\n')
+    f.write('<html><head><title>unblock-zh dup mails</title></head>\n')
+    f.write('<body><table>\n')
     f.write('<tr><th>email</th><th>count</th><tr>\n')
     for mail, cnt in mail_count.items():
         if cnt > 1:
