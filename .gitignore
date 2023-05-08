@@ -3,6 +3,7 @@ __pycache__/
 apicache-py3/
 config.py
 dup_mails.html
+latest_time.csv
 new_links.txt
 pywikibot.lwp
 throttle.ctrl

@@ -1,5 +1,6 @@
 import argparse
 import collections
+import csv
 import datetime
 import json
 import os
@@ -22,6 +23,8 @@ parser.set_defaults(cache1=False, cache2=False)
 args = parser.parse_args()
 print(args)
 
+run_time = datetime.datetime.now()
+
 unblockZh = UnblockZh(1234)
 unblockZh.maxResults = args.limit
 unblockZh.cacheThread = args.cache1
@@ -33,8 +36,10 @@ count_done = collections.defaultdict(int)
 count_new = collections.defaultdict(int)
 oldest_date = datetime.datetime.now()
 new_links = []
-
 mail_count = collections.defaultdict(int)
+latest_time = dict()
+
+latest_limit = datetime.datetime.now() - dateutil.relativedelta.relativedelta(days=14)
 
 for thread in unblockZh.threads:
     data = unblockZh.getThread(thread['id'])
@@ -61,6 +66,8 @@ for thread in unblockZh.threads:
             data['messages'][0].get('subject'),
         ))
         mail_count[mail_list[0]] += 1
+        if first_time > latest_limit:
+            latest_time[mail_list[0]] = max(latest_time.get(mail_list[0], datetime.datetime.min), first_time)
 
 oldest_date = oldest_date.replace(hour=0, minute=0, second=0)
 
@@ -89,6 +96,15 @@ with open(BASE_DIR / 'dup_mails.html', 'w', encoding='utf8') as f:
         if cnt > 1:
             f.write('<tr><td>{}</td><td>{}</td></tr>\n'.format(mail, cnt))
     f.write('</table></body></html>\n')
+
+latest_time_json = {
+    'updated_at': run_time.strftime('%Y-%m-%d %H:%M'),
+    'list': [],
+}
+for mail, time in sorted(latest_time.items(), key=lambda x: x[1]):
+    latest_time_json['list'].append([mail, time.strftime('%Y-%m-%d %H:%M')])
+with open(BASE_DIR / 'latest_time.json', 'w', encoding='utf8') as f:
+    json.dump(latest_time_json, f)
 
 site = pywikibot.Site()
 site.login()
