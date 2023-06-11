@@ -3,7 +3,9 @@ import collections
 import csv
 import datetime
 import json
+import logging
 import os
+import sys
 from pathlib import Path
 
 import dateutil.relativedelta
@@ -12,16 +14,24 @@ BASE_DIR = Path(__file__).resolve().parent
 os.environ['PYWIKIBOT_DIR'] = str(BASE_DIR)
 import pywikibot
 
-from config import ADMIN_MAILS, PAGE_NAME
+from config import ADMIN_MAILS, CONFIG_PAGE_NAME
 from unblockzh.unblockzh import UnblockZh
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--limit', type=int, default=500)
 parser.add_argument('--cache1', action='store_true')
 parser.add_argument('--cache2', action='store_true')
+parser.add_argument('-d', '--debug', action='store_const', dest='loglevel', const=logging.DEBUG, default=logging.INFO)
 parser.set_defaults(cache1=False, cache2=False)
 args = parser.parse_args()
-print(args)
+
+logger = logging.getLogger('unblock-zh-status')
+formatter = logging.Formatter('%(asctime)s | %(levelname)s | %(message)s')
+stdout_handler = logging.StreamHandler(sys.stdout)
+stdout_handler.setFormatter(formatter)
+logger.addHandler(stdout_handler)
+logger.setLevel(args.loglevel)
+logger.debug('args: %s', args)
 
 run_time = datetime.datetime.now()
 
@@ -109,6 +119,15 @@ with open(BASE_DIR / 'latest_time.json', 'w', encoding='utf8') as f:
 site = pywikibot.Site()
 site.login()
 
-page = pywikibot.Page(site, PAGE_NAME)
-page.text = json.dumps(result)
-page.save(summary='更新', minor=False)
+config_page = pywikibot.Page(site, CONFIG_PAGE_NAME)
+cfg = config_page.text
+cfg = json.loads(cfg)
+logger.debug('config: %s', json.dumps(cfg, indent=4, ensure_ascii=False))
+
+if cfg['enable']:
+    summary = cfg['summary'].format(len(result['links']))
+    logger.debug('summary: %s', summary)
+
+    page = pywikibot.Page(site, cfg['page_name'])
+    page.text = json.dumps(result)
+    page.save(summary=summary, minor=False)
