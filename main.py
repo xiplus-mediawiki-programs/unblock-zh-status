@@ -49,7 +49,7 @@ new_links = []
 mail_count = collections.defaultdict(int)
 latest_time = dict()
 
-latest_limit = datetime.datetime.now() - dateutil.relativedelta.relativedelta(days=21)
+latest_limit = datetime.datetime.now() - dateutil.relativedelta.relativedelta(days=42)
 
 for thread in unblockZh.threads:
     data = unblockZh.getThread(thread['id'])
