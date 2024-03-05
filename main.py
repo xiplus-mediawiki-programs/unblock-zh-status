@@ -1,6 +1,5 @@
 import argparse
 import collections
-import csv
 import datetime
 import json
 import logging
@@ -14,7 +13,7 @@ BASE_DIR = Path(__file__).resolve().parent
 os.environ['PYWIKIBOT_DIR'] = str(BASE_DIR)
 import pywikibot
 
-from config import ADMIN_MAILS, BAN_MAILS, CONFIG_PAGE_NAME
+from config import ADMIN_MAILS, BAN_MAILS, CONFIG_PAGE_NAME, MAIL_QUERY
 from unblockzh.unblockzh import UnblockZh
 
 parser = argparse.ArgumentParser()
@@ -35,7 +34,7 @@ logger.debug('args: %s', args)
 
 run_time = datetime.datetime.now()
 
-unblockZh = UnblockZh(1234)
+unblockZh = UnblockZh(MAIL_QUERY, 1234)
 unblockZh.maxResults = args.limit
 unblockZh.cacheThread = args.cache1
 unblockZh.cacheThreads = args.cache2
