@@ -118,6 +118,9 @@ for mail, time in sorted(latest_time.items(), key=lambda x: x[1]):
 with open(BASE_DIR / 'latest_time.json', 'w', encoding='utf8') as f:
     json.dump(latest_time_json, f)
 
+if CONFIG_PAGE_NAME is None:
+    sys.exit(0)
+
 site = pywikibot.Site()
 site.login()
 

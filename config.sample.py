@@ -5,4 +5,4 @@ ADMIN_MAILS = [
 BAN_MAILS = [
     'wiki@wikimedia.org',
 ]
-CONFIG_PAGE_NAME = ''
+CONFIG_PAGE_NAME = None
