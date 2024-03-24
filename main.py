@@ -13,7 +13,7 @@ BASE_DIR = Path(__file__).resolve().parent
 os.environ['PYWIKIBOT_DIR'] = str(BASE_DIR)
 import pywikibot
 
-from config import ADMIN_MAILS, BAN_MAILS, CONFIG_PAGE_NAME, MAIL_QUERY
+from config import ADMIN_MAILS, BAN_MAILS, CONFIG_PAGE_NAME, MAIL_QUERY, OUTDATED_LIMIT
 from unblockzh.unblockzh import UnblockZh
 
 parser = argparse.ArgumentParser()
@@ -48,7 +48,7 @@ new_links = []
 mail_count = collections.defaultdict(int)
 latest_time = dict()
 
-latest_limit = datetime.datetime.now() - dateutil.relativedelta.relativedelta(days=42)
+latest_limit = datetime.datetime.now() - dateutil.relativedelta.relativedelta(days=OUTDATED_LIMIT)
 
 for thread in unblockZh.threads:
     data = unblockZh.getThread(thread['id'])
