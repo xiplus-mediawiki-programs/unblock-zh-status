@@ -91,6 +91,23 @@ while run_date > oldest_date:
     result['statistics'].append({'x': date_str, 'y': count_done[date_str], 'c': 1})
     run_date += dateutil.relativedelta.relativedelta(days=-1)
 
+latest_time_json = {
+    'updated_at': run_time.strftime('%Y-%m-%d %H:%M'),
+    'list': [],
+    'statistics': [],
+}
+
+time_now = datetime.datetime.now()
+run_date = latest_limit
+while run_date < time_now:
+    date_str = run_date.strftime('%Y-%m-%d')
+    latest_time_json['statistics'].append({
+        'label': date_str,
+        'new': count_new[date_str],
+        'done': count_done[date_str],
+    })
+    run_date += dateutil.relativedelta.relativedelta(days=1)
+
 with open(BASE_DIR / 'new_links.txt', 'w', encoding='utf8') as f:
     for row in new_links:
         if row[1]:
@@ -109,10 +126,6 @@ with open(BASE_DIR / 'dup_mails.html', 'w', encoding='utf8') as f:
             f.write('<tr><td>{}</td><td>{}</td></tr>\n'.format(mail, cnt))
     f.write('</table></body></html>\n')
 
-latest_time_json = {
-    'updated_at': run_time.strftime('%Y-%m-%d %H:%M'),
-    'list': [],
-}
 for mail, time in sorted(latest_time.items(), key=lambda x: x[1]):
     latest_time_json['list'].append([mail, time.strftime('%Y-%m-%d %H:%M')])
 with open(BASE_DIR / 'latest_time.json', 'w', encoding='utf8') as f:
